@@ -53,4 +53,14 @@ body {
 ::-webkit-scrollbar-thumb {
     background: #334155;
     border-radius: 10px;
+ }   
+    /* Añadir esto al final de tu style.css */
+summary::-webkit-details-marker {
+    display: none;
+}
+
+details[open] summary {
+    margin-bottom: 10px;
+}
+
 }
