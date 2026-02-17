@@ -2,29 +2,36 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Series Tracker Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Series Tracker | Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="p-4 md:p-8">
+<body class="p-4 md:p-12">
 
-    <div class="max-w-5xl mx-auto">
-        <header class="mb-10 text-center">
-            <h1 class="text-4xl font-extrabold tracking-tight text-white mb-2">MY SERIES <span class="text-blue-500">TRACKER</span></h1>
-            <p class="text-gray-400">Organiza tus maratones desde tu iPad</p>
+    <div class="max-w-6xl mx-auto">
+        <header class="mb-12 text-center animate-fade-in">
+            <h1 class="text-5xl font-black italic tracking-tighter text-white">
+                MIS <span class="text-blue-500">SERIES</span>
+            </h1>
+            <div class="h-1 w-20 bg-blue-600 mx-auto mt-2 rounded-full"></div>
         </header>
 
-        <div class="relative max-w-xl mx-auto mb-12">
-            <input type="text" id="searchInput" placeholder="Buscar una serie..." 
-                class="w-full p-4 pl-6 rounded-full text-white glass-card focus:ring-2 focus:ring-blue-500 outline-none">
-            <button onclick="searchSeries()" class="absolute right-2 top-2 btn-add px-6 py-2 rounded-full font-bold">BUSCAR</button>
+        <div class="relative max-w-2xl mx-auto mb-16 animate-fade-in" style="animation-delay: 0.2s">
+            <input type="text" id="searchInput" placeholder="¿Qué serie viste hoy?" 
+                class="w-full p-5 pl-8 rounded-2xl text-white glass-card focus:ring-4 focus:ring-blue-500/20 outline-none text-lg">
+            <button onclick="searchSeries()" class="absolute right-3 top-3 btn-add px-8 py-3 rounded-xl font-black text-xs tracking-widest text-white uppercase">BUSCAR</button>
         </div>
 
-        <div id="results" class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12"></div>
+        <div id="results" class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-20"></div>
 
-        <h2 class="text-2xl font-bold mb-6 border-l-4 border-blue-500 pl-4">MI LISTA PERSONAL</h2>
-        <div id="myList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        <div class="flex items-center gap-4 mb-8 animate-fade-in">
+            <h2 class="text-3xl font-black tracking-tight">MI LISTA</h2>
+            <div class="flex-1 h-px bg-gray-800"></div>
+        </div>
+        
+        <div id="myList" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
     </div>
 
     <script src="script.js"></script>
