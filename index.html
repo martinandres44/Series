@@ -3,122 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mis Series - Tracker</title>
+    <title>Series Tracker Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .poster-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-gray-900 text-white min-h-screen p-4">
+<body class="p-4 md:p-8">
 
-    <div class="max-w-4xl mx-auto">
-        <h1 class="text-3xl font-bold mb-6 text-center text-blue-400">📺 Mi Tracker de Series</h1>
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-4xl font-extrabold tracking-tight text-white mb-2">MY SERIES <span class="text-blue-500">TRACKER</span></h1>
+            <p class="text-gray-400">Organiza tus maratones desde tu iPad</p>
+        </header>
 
-        <div class="flex gap-2 mb-8">
-            <input type="text" id="searchInput" placeholder="Buscar serie (ej: Succession)..." 
-                class="flex-1 p-3 rounded bg-gray-800 border border-gray-700 focus:outline-none focus:border-blue-500">
-            <button onclick="searchSeries()" class="bg-blue-600 px-6 py-2 rounded font-bold">Buscar</button>
+        <div class="relative max-w-xl mx-auto mb-12">
+            <input type="text" id="searchInput" placeholder="Buscar una serie..." 
+                class="w-full p-4 pl-6 rounded-full text-white glass-card focus:ring-2 focus:ring-blue-500 outline-none">
+            <button onclick="searchSeries()" class="absolute right-2 top-2 btn-add px-6 py-2 rounded-full font-bold">BUSCAR</button>
         </div>
 
-        <div id="results" class="poster-grid mb-12"></div>
+        <div id="results" class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12"></div>
 
-        <hr class="border-gray-800 mb-8">
-
-        <h2 class="text-2xl font-bold mb-4">🍿 Mi Lista Personal</h2>
-        <div id="myList" class="space-y-4"></div>
+        <h2 class="text-2xl font-bold mb-6 border-l-4 border-blue-500 pl-4">MI LISTA PERSONAL</h2>
+        <div id="myList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
     </div>
 
-    <script>
-        const API_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4YTZhYWE3OWY1ZGY3NzU4MDMxNTQxZDMzNDI0ZDBlOSIsIm5iZiI6MTc3MTMwMzM0MC40OTcsInN1YiI6IjY5OTNmMWFjNmQ2Y2NmMzgzNDFhZmFiOCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.tAiPgZg4TARj_SVd73uL22CJXj0cUb_gCtPrxWpJo8w";
-        let seriesList = JSON.parse(localStorage.getItem('mySeries')) || [];
-
-        async function searchSeries() {
-            const query = document.getElementById('searchInput').value;
-            if (!query) return;
-
-            const response = await fetch(`https://api.themoviedb.org/3/search/tv?query=${query}&language=es-AR`, {
-                headers: { Authorization: `Bearer ${API_TOKEN}` }
-            });
-            const data = await response.json();
-            displayResults(data.results);
-        }
-
-        function displayResults(results) {
-            const container = document.getElementById('results');
-            container.innerHTML = '';
-            results.slice(0, 4).forEach(show => {
-                const div = document.createElement('div');
-                div.className = "bg-gray-800 p-2 rounded text-center";
-                div.innerHTML = `
-                    <img src="https://image.tmdb.org/t/p/w200${show.poster_path}" class="rounded mb-2">
-                    <p class="text-sm font-bold mb-2">${show.name}</p>
-                    <button onclick='addSeries(${JSON.stringify(show).replace(/'/g, "&apos;")})' 
-                        class="bg-green-600 text-xs px-2 py-1 rounded">➕ Agregar</button>
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        function addSeries(show) {
-            if (!seriesList.some(s => s.id === show.id)) {
-                seriesList.push({
-                    id: show.id,
-                    name: show.name,
-                    poster: show.poster_path,
-                    rating: 5,
-                    comment: "",
-                    status: "Pendiente"
-                });
-                saveAndRender();
-            }
-        }
-
-        function saveAndRender() {
-            localStorage.setItem('mySeries', JSON.stringify(seriesList));
-            renderList();
-        }
-
-        function renderList() {
-            const container = document.getElementById('myList');
-            container.innerHTML = '';
-            seriesList.forEach((show, index) => {
-                const div = document.createElement('div');
-                div.className = "bg-gray-800 p-4 rounded-lg flex gap-4 items-center";
-                div.innerHTML = `
-                    <img src="https://image.tmdb.org/t/p/w200${show.poster}" class="w-16 rounded">
-                    <div class="flex-1">
-                        <h3 class="font-bold">${show.name}</h3>
-                        <div class="flex gap-2 mt-2">
-                            <select onchange="updateShow(${index}, 'status', this.value)" class="bg-gray-700 text-xs p-1 rounded">
-                                <option ${show.status === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
-                                <option ${show.status === 'Viendo' ? 'selected' : ''}>Viendo</option>
-                                <option ${show.status === 'Terminada' ? 'selected' : ''}>Terminada</option>
-                            </select>
-                            <input type="number" value="${show.rating}" min="0" max="10" 
-                                onchange="updateShow(${index}, 'rating', this.value)"
-                                class="bg-gray-700 text-xs p-1 rounded w-12 text-center">
-                        </div>
-                        <input type="text" placeholder="Comentario..." value="${show.comment}"
-                            onchange="updateShow(${index}, 'comment', this.value)"
-                            class="bg-gray-700 text-xs p-2 mt-2 w-full rounded border-none">
-                    </div>
-                    <button onclick="removeShow(${index})" class="text-red-500 font-bold px-2 text-xl">×</button>
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        function updateShow(index, field, value) {
-            seriesList[index][field] = value;
-            localStorage.setItem('mySeries', JSON.stringify(seriesList));
-        }
-
-        function removeShow(index) {
-            seriesList.splice(index, 1);
-            saveAndRender();
-        }
-
-        renderList();
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
